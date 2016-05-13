@@ -1,14 +1,38 @@
-new
+import xlrd
+import xlwt
+from xlwt import *
 
-sdsd
+def splitUpFile(inPath,maxEntriesInOneSheet):
+    book=xlrd.open_workbook(inPath)
+    outPath=inPath+"tmp.xls"
+    xl_sheet = book.sheet_by_index(0)
+    noOfRows=xl_sheet.nrows
+    noOfSheets=noOfRows/maxEntriesInOneSheet
+    wb=Workbook()
+    rowindex=0
+    for i in range(0,noOfSheets):
+        ws=wb.add_sheet(str(i))
+        for xx in range(0,maxEntriesInOneSheet):
+            for col in range(0,xl_sheet.ncols):
+                ws.write(xx,col,xl_sheet.cell(rowindex+xx,col).value)
+            if rowindex+xx>=noOfRows:
+                break
+            else:
+                rowindex = rowindex+1
+    wb.save(outPath)
 
-first
-1111
-2222
-3333
-4444
-5555
-6666
-master
-jahanpan
-master222
+if __name__=="__main__":
+    splitUpFile("data/ApplicantExport.xls",1)
+    exit()
+    print "yes"
+    book = xlrd.open_workbook("data/ApplicantExport.xls")
+    wb=Workbook()
+    ws=wb.add_sheet('0')
+    xl_sheet = book.sheet_by_index(0)
+    print xl_sheet.nrows
+    print xl_sheet.ncols
+    for row in range(0,xl_sheet.nrows):
+        for col in range(0,xl_sheet.ncols):
+            print xl_sheet.cell(row,col).value
+            ws.write(row,col,xl_sheet.cell(row,col).value, XFStyle())
+    wb.save("data/ApplicantExport1.xls")
